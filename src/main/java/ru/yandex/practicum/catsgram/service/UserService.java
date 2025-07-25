@@ -1,5 +1,6 @@
 package ru.yandex.practicum.catsgram.service;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import ru.yandex.practicum.catsgram.exception.ConditionsNotMetException;
 import ru.yandex.practicum.catsgram.exception.DuplicatedDataException;
@@ -12,17 +13,23 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 
+@Slf4j
 @Service
 public class UserService {
 
     private final Map<Long, User> users = new HashMap<>();
 
-        public Collection<User> findAll() {
+    public Collection<User> findAll() {
         return users.values();
     }
 
-        public User create(User user) {
+    public Optional<User> findUserById(long authorId) {
+        return Optional.ofNullable(users.get(authorId));
+    }
+
+    public User create(User user) {
         // проверяем выполнение необходимых условий
+        log.info("вызван метод create");
         if (user.getEmail() == null || user.getEmail().isBlank()) {
             throw new ConditionsNotMetException("Имейл должен быть указан");
         }
@@ -43,6 +50,7 @@ public class UserService {
     }
 
     public User update(User newUser) {
+        log.info("вызван метод update");
         // проверяем необходимые условия
         if (newUser.getId() == null) {
             throw new ConditionsNotMetException("Id должен быть указан");
@@ -69,17 +77,14 @@ public class UserService {
 
     // вспомогательный метод для генерации идентификатора нового пользователя
     private long getNextId() {
+
         long currentMaxId = users.keySet()
                 .stream()
                 .mapToLong(id -> id)
                 .max()
                 .orElse(0);
+        log.info("присвоено id = " + (currentMaxId+1));
         return ++currentMaxId;
     }
 
-    public Optional<User> findUserById(long authorId) {
-         if (users.containsKey(authorId)) {
-             return Optional.of(users.get(authorId));
-         } else return Optional.empty();
-    }
 }

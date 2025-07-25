@@ -16,4 +16,8 @@ public class Post {
     String description;
     Instant postDate;
 
+    public Post(long authorId, String description) {
+        this.authorId = authorId;
+        this.description = description;
+    }
 }

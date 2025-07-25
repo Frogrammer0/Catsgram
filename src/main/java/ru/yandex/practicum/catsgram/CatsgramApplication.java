@@ -14,6 +14,7 @@ public class CatsgramApplication {
 
         SpringApplication.run(CatsgramApplication.class, args);
 
+
         /*final Gson gson = new Gson();
         final Scanner scanner = new Scanner(System.in);
         System.out.print("Введите JSON => ");
